@@ -2,31 +2,38 @@ import React from "react";
 import { Header, Footer } from "../Components/Layouts/index";
 import Main from "../Components/Exercises/index";
 
-import { muscules, exercises } from "../Store";
+import { muscles, exercises } from "../Store";
 
 class App extends React.Component {
   state = {
-    exercises
+    exercises,
+    category: ""
   };
 
-  getExercisesByMuscules() {
+  getExercisesByMuscles() {
     return Object.entries(
       this.state.exercises.reduce((exercises, exercise) => {
-        const { muscules } = exercise;
+        const { muscles } = exercise;
 
-        exercises[muscules] = exercises[muscules] ? [...exercises[muscules], exercise] : [exercise];
+        exercises[muscles] = exercises[muscles] ? [...exercises[muscles], exercise] : [exercises];
         return exercises;
       }, {})
     );
   }
 
+  handleCategorySelected = category => {
+    this.setState({ category });
+  };
+
   render() {
-    const exercises = this.getExercisesByMuscules();
+    const exercises = this.getExercisesByMuscles(),
+      { category } = this.state;
+    console.log(this.getExercisesByMuscles());
     return (
       <div>
         <Header />
-        <Main exercises={exercises} />
-        <Footer muscules={muscules} />
+        <Main exercises={exercises} category={category} />
+        <Footer muscles={muscles} category={category} onSelect={this.handleCategorySelected} />
       </div>
     );
   }
