@@ -7,7 +7,7 @@ import { muscles, exercises } from "../Store";
 class App extends React.Component {
   state = {
     exercises,
-    category: ""
+    exercise: {}
   };
 
   getExercisesByMuscles() {
@@ -15,11 +15,19 @@ class App extends React.Component {
       this.state.exercises.reduce((exercises, exercise) => {
         const { muscles } = exercise;
 
-        exercises[muscles] = exercises[muscles] ? [...exercises[muscles], exercise] : [exercises];
+        exercises[muscles] = exercises[muscles]
+          ? [...exercises[muscles], exercise]
+          : [exercises];
         return exercises;
       }, {})
     );
   }
+
+  handleExerciseSelected = id => {
+    this.setState(({ exercises }) => ({
+      exercise: exercises.find(ex => ex.id === id)
+    }));
+  };
 
   handleCategorySelected = category => {
     this.setState({ category });
@@ -27,13 +35,22 @@ class App extends React.Component {
 
   render() {
     const exercises = this.getExercisesByMuscles(),
-      { category } = this.state;
+      { category, exercise } = this.state;
     console.log(this.getExercisesByMuscles());
     return (
       <div>
         <Header />
-        <Main exercises={exercises} category={category} />
-        <Footer muscles={muscles} category={category} onSelect={this.handleCategorySelected} />
+        <Main
+          exercise={exercise}
+          exercises={exercises}
+          category={category}
+          onSelect={this.handleExerciseSelected}
+        />
+        <Footer
+          muscles={muscles}
+          category={category}
+          onSelect={this.handleCategorySelected}
+        />
       </div>
     );
   }
