@@ -1,6 +1,8 @@
 import React from "react"
+import CssBaseline from "@material-ui/core/CssBaseline"
 import { Header, Footer } from "../Components/Layouts/index"
 import Main from "../Components/Exercises/index"
+import { Provider } from "../context"
 
 import { muscles, exercises } from "../Store"
 
@@ -46,10 +48,10 @@ class App extends React.Component {
   }
 
   handleExerciseDelete = id => {
-    this.setState(({ exercises }) => ({
+    this.setState(({ exercises, exercise, editMode }) => ({
       exercises: exercises.filter(ex => ex.id === id),
-      editMode: false,
-      exercise: {}
+      editMode: exercise.id === id ? false : editMode,
+      exercise: exercise.id === id ? {} : exercise
     }))
   }
 
@@ -65,33 +67,28 @@ class App extends React.Component {
       exercises: [...exercises.filter(ex => ex.id !== exercise.id), exercise]
     }))
 
+  getContext = () => ({
+    muscles,
+    ...this.state,
+    exercisesByMuscles: this.getExercisesByMuscles(),
+    onCategorySelect: this.handleCategorySelect,
+    onCreate: this.handleExerciseCreate,
+    onEdit: this.handleExerciseEdit,
+    onSelectEdit: this.handleExerciseSelectEdit,
+    onDelete: this.handleExerciseDelete,
+    onSelect: this.handleExerciseSelect
+  })
+
   render() {
-    const exercises = this.getExercisesByMuscles(),
-      { category, exercise, editMode } = this.state
-    console.log(this.getExercisesByMuscles())
     return (
-      <div>
-        <Header
-          muscles={muscles}
-          onExerciseCreate={this.handleExerciseCreate}
-        />
-        <Main
-          exercise={exercise}
-          exercises={exercises}
-          category={category}
-          muscles={muscles}
-          onSelect={this.handleExerciseSelect}
-          onDelete={this.handleExerciseDelete}
-          onSelectEdit={this.handleExerciseSelectEdit}
-          editMode={editMode}
-          onEdit={this.handleExerciseEdit}
-        />
-        <Footer
-          muscles={muscles}
-          category={category}
-          onSelect={this.handleCategorySelect}
-        />
-      </div>
+      <Provider value={this.getContext()}>
+        <div>
+          <CssBaseline />
+          <Header />
+          <Main />
+          <Footer />
+        </div>
+      </Provider>
     )
   }
 }

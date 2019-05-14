@@ -8,8 +8,9 @@ import {
 
 import Form from "./Form"
 import { Add } from "@material-ui/icons"
+import { withContext } from "../../context"
 
-export default class extends Component {
+class CreateDialog extends Component {
   state = {
     open: false
   }
@@ -32,10 +33,15 @@ export default class extends Component {
 
     return (
       <Fragment>
-        <Button variant="fab" onClick={this.handleToggle} mini>
+        <Button
+          variant="fab"
+          onClick={this.handleToggle}
+          color="secondary"
+          mini
+        >
           <Add />
         </Button>
-        <Dialog open={open} onClose={this.handleToggle}>
+        <Dialog open={open} onClose={this.handleToggle} fullWidth maxWidth="xs">
           <DialogTitle>Create a new exercise</DialogTitle>
           <DialogContent>
             <DialogContentText>Please fill a form</DialogContentText>
@@ -46,3 +52,5 @@ export default class extends Component {
     )
   }
 }
+
+export default withContext(CreateDialog)

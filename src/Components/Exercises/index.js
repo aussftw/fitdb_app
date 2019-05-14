@@ -9,22 +9,47 @@ import {
   ListItemSecondaryAction,
   IconButton
 } from "@material-ui/core"
+import { withStyles } from "@material-ui/core/styles"
 import { Edit, Delete } from "@material-ui/icons"
 import Form from "./Form"
+import { withContext } from "../../context"
 
-const style = {
+const styles = theme => ({
   Paper: {
     padding: 20,
-    marginTop: 10,
-    marginBottom: 10,
-    hight: 500,
-    overflowY: "auto"
+    overflowY: "auto",
+    [theme.breakpoints.up("sm")]: {
+      marginTop: 5,
+      height: "calc(100%-10px)"
+    },
+    [theme.breakpoints.down("xs")]: {
+      height: "100%"
+    }
+  },
+  "@global": {
+    "html, body, #root": {
+      height: "100%"
+    }
+  },
+  container: {
+    [theme.breakpoints.up("sm")]: {
+      height: "calc(100%-64px -48px)"
+    },
+    [theme.breakpoints.down("xs")]: {
+      height: "calc(100% - 56px - 48px)"
+    }
+  },
+  item: {
+    [theme.breakpoints.down("xs")]: {
+      height: "50%"
+    }
   }
-}
+})
 
-export default ({
+const Exercises = ({
+  classes,
   muscles,
-  exercises,
+  exercisesByMuscles,
   category,
   onSelect,
   onEdit,
@@ -38,15 +63,16 @@ export default ({
   onDelete,
   onSelectEdit
 }) => (
-  <Grid container>
-    <Grid item sm>
-      <Paper style={style.Paper}>
-        {exercises.map(([group, exercises]) =>
+  <Grid container className={classes.container}>
+    <Grid item className={classes.item} xs={12} sm={6}>
+      <Paper className={classes.Paper}>
+        {exercisesByMuscles.map(([group, exercises]) =>
           !category || category === group ? (
             <Fragment key={group}>
               <Typography
                 variant="headline"
-                style={{ textTransform: "capitalize" }}
+                color="secondary"
+                className={{ textTransform: "capitalize" }}
               >
                 {group}
               </Typography>
@@ -55,10 +81,13 @@ export default ({
                   <ListItem button key={id} onClick={() => onSelect(id)}>
                     <ListItemText primary={title} />
                     <ListItemSecondaryAction>
-                      <IconButton onClick={() => onSelectEdit(id)}>
+                      <IconButton
+                        color="primary"
+                        onClick={() => onSelectEdit(id)}
+                      >
                         <Edit />
                       </IconButton>
-                      <IconButton onClick={() => onDelete(id)}>
+                      <IconButton color="primary" onClick={() => onDelete(id)}>
                         <Delete />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -70,19 +99,24 @@ export default ({
         )}
       </Paper>
     </Grid>
-    <Grid item sm>
-      <Paper style={style.Paper}>
+    <Grid item className={classes.item} s={12} sm={6}>
+      <Paper className={classes.Paper}>
+        <Typography variant="display1" gutterBottom color="secondary">
+          {title}
+        </Typography>
         {editMode ? (
-          <Form muscles={muscles} onSubmit={onEdit} exercise={exercise} />
+          <Form
+            key={id}
+            muscles={muscles}
+            onSubmit={onEdit}
+            exercise={exercise}
+          />
         ) : (
-          <Fragment>
-            <Typography variant="display1">{title}</Typography>
-            <Typography variant="subheading" style={{ marginTop: 20 }}>
-              {description}
-            </Typography>
-          </Fragment>
+          <Typography variant="subheading">{description}</Typography>
         )}
       </Paper>
     </Grid>
   </Grid>
 )
+
+export default withContext(withStyles(styles)(Exercises))
