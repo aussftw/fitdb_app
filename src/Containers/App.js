@@ -3,7 +3,6 @@ import { CssBaseline } from "@material-ui/core"
 import { Header, Footer } from "../Components/Layouts/index"
 import { Viewer } from "../Components/Exercises/index"
 import { Provider } from "../context"
-
 import { muscles, exercises } from "../Store"
 
 class App extends PureComponent {
@@ -46,7 +45,7 @@ class App extends PureComponent {
 
   handleExerciseDelete = id =>
     this.setState(({ exercises, exercise, editMode }) => ({
-      exercises: exercises.filter(ex => ex.id === id),
+      exercises: exercises.filter(ex => ex.id !== id),
       editMode: exercise.id === id ? false : editMode,
       exercise: exercise.id === id ? {} : exercise
     }))
@@ -59,7 +58,8 @@ class App extends PureComponent {
 
   handleExerciseEdit = exercise =>
     this.setState(({ exercises }) => ({
-      exercises: [...exercises.filter(ex => ex.id !== exercise.id), exercise]
+      exercises: [...exercises.filter(ex => ex.id !== exercise.id), exercise],
+      exercise
     }))
 
   getContext = () => ({

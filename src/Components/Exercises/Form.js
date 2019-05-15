@@ -1,8 +1,12 @@
 import React, { Component } from "react"
-import { TextField, Select, Button } from "@material-ui/core"
-import { FormControl } from "@material-ui/core/FormControl"
-import { InputLabel } from "@material-ui/core/InputLabel"
-import { MenuItem } from "@material-ui/core/Menu"
+import {
+  TextField,
+  Select,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem
+} from "@material-ui/core"
 
 class Form extends Component {
   state = this.getInitialState()
@@ -31,8 +35,8 @@ class Form extends Component {
     })
 
   render() {
-    const { title, description, muscles } = this.state,
-      { exercise, muscles: categories } = this.props
+    const { title, description, muscles } = this.state
+    const { exercise, muscles: categories } = this.props
     return (
       <form>
         <TextField
@@ -40,6 +44,7 @@ class Form extends Component {
           value={title}
           name="title"
           onChange={this.handleChange}
+          margin="normal"
           fullWidth
         />
 
