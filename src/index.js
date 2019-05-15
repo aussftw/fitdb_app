@@ -10,12 +10,17 @@ const theme = createMuiTheme({
   palette: {
     primary: red,
     secondary: {
-      main: amber.A400
+      main: amber.A400,
+      light: amber[200],
+      dark: amber[700]
     },
     type: "dark"
   },
   spacing: {
     unit: "10"
+  },
+  typography: {
+    useNextVariants: true
   }
 })
 

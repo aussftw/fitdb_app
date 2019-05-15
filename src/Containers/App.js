@@ -1,15 +1,17 @@
-import React from "react"
-import CssBaseline from "@material-ui/core/CssBaseline"
+import React, { PureComponent } from "react"
+import { CssBaseline } from "@material-ui/core"
 import { Header, Footer } from "../Components/Layouts/index"
-import Main from "../Components/Exercises/index"
+import { Viewer } from "../Components/Exercises/index"
 import { Provider } from "../context"
 
 import { muscles, exercises } from "../Store"
 
-class App extends React.Component {
+class App extends PureComponent {
   state = {
     exercises,
-    exercise: {}
+    exercise: {},
+    editMode: false,
+    category: ""
   }
 
   getExercisesByMuscles() {
@@ -17,7 +19,6 @@ class App extends React.Component {
       (exercises, category) => ({ ...exercises, [category]: [] }),
       {}
     )
-    console.log(muscles, initExercises)
 
     return Object.entries(
       this.state.exercises.reduce((exercises, exercise) => {
@@ -30,37 +31,31 @@ class App extends React.Component {
     )
   }
 
-  handleExerciseSelect = id => {
+  handleExerciseSelect = id =>
     this.setState(({ exercises }) => ({
       exercise: exercises.find(ex => ex.id === id),
       editMode: false
     }))
-  }
 
-  handleCategorySelect = category => {
-    this.setState({ category })
-  }
+  handleCategorySelect = category => this.setState({ category })
 
-  handleExerciseCreate = exercise => {
+  handleExerciseCreate = exercise =>
     this.setState(({ exercises }) => ({
       exercises: [...exercises, exercise]
     }))
-  }
 
-  handleExerciseDelete = id => {
+  handleExerciseDelete = id =>
     this.setState(({ exercises, exercise, editMode }) => ({
       exercises: exercises.filter(ex => ex.id === id),
       editMode: exercise.id === id ? false : editMode,
       exercise: exercise.id === id ? {} : exercise
     }))
-  }
 
-  handleExerciseSelectEdit = id => {
+  handleExerciseSelectEdit = id =>
     this.setState(({ exercises }) => ({
-      exercises: exercises.find(ex => ex.id === id),
+      exercise: exercises.find(ex => ex.id === id),
       editMode: true
     }))
-  }
 
   handleExerciseEdit = exercise =>
     this.setState(({ exercises }) => ({
@@ -82,12 +77,10 @@ class App extends React.Component {
   render() {
     return (
       <Provider value={this.getContext()}>
-        <div>
-          <CssBaseline />
-          <Header />
-          <Main />
-          <Footer />
-        </div>
+        <CssBaseline />
+        <Header />
+        <Viewer />
+        <Footer />
       </Provider>
     )
   }

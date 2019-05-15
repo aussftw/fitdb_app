@@ -1,21 +1,26 @@
 import React, { Component } from "react"
+import { compose } from "recompose"
 import { AppBar, Tabs, Tab, withWidth } from "@material-ui/core"
 import { withContext } from "../../context"
 
 class Footer extends Component {
-  onIndexSelect = (e, index) => {
-    const { onCategorySelect, muscles } = this.props
+  muscles = this.getMuscles()
 
-    onCategorySelect(index === 0 ? "" : muscles[index - 1])
+  getMuscles() {
+    return ["", ...this.props.muscles]
+  }
+
+  onIndexSelect = (e, index) => {
+    this.props.onCategorySelect(this.muscles[index])
   }
 
   getIndex = () => {
-    const { category, muscles } = this.props
-    return category ? muscles.findIndex(group => group === category) + 1 : 0
+    return this.muscles.indexOf(this.props.category)
   }
 
   render() {
-    const { width, muscles } = this.props
+    const { width } = this.props
+    const isMobile = width === "xs"
     return (
       <AppBar position="static">
         <Tabs
@@ -23,12 +28,11 @@ class Footer extends Component {
           onChange={this.onIndexSelect}
           indicatorColor="secondary"
           textColor="secondary"
-          centered={width !== "xs"}
-          scrollable={width === "xs"}
+          variant={isMobile ? "scrollable" : "standard"}
+          centered={!isMobile}
         >
-          <Tab label="All" />
-          {muscles.map(group => (
-            <Tab key={group.id} label={group} />
+          {this.muscles.map(group => (
+            <Tab key={group} label={group || "All"} />
           ))}
         </Tabs>
       </AppBar>
@@ -36,4 +40,7 @@ class Footer extends Component {
   }
 }
 
-export default withContext(withWidth()(Footer))
+export default compose(
+  withContext,
+  withWidth()
+)(Footer)

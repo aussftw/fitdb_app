@@ -1,4 +1,2 @@
-import Header from "./Hedaer";
-import Footer from "./Footer";
-
-export { Header, Footer };
+export { default as Header } from "./Hedaer"
+export { default as Footer } from "./Footer"

@@ -1,6 +1,6 @@
 import React from "react"
 import { AppBar, Toolbar, Typography } from "@material-ui/core"
-import CreateDialog from "../Exercises/Dialog"
+import { Dialog } from "../Exercises/index"
 import { withStyles } from "@material-ui/core/styles"
 
 const styles = {
@@ -9,13 +9,15 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(({ classes }) => (
+const Header = ({ classes }) => (
   <AppBar position="static">
     <Toolbar>
-      <Typography variant="headline" color="inherit" className={classes.flex}>
+      <Typography variant="h5" color="inherit" className={classes.flex}>
         Exercises DB
       </Typography>
-      <CreateDialog />
+      <Dialog />
     </Toolbar>
   </AppBar>
-))
+)
+
+export default withStyles(styles)(Header)
